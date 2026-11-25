@@ -8,7 +8,8 @@ from src.portfolio import (
 )
 
 
-def main():
+def main() -> None:
+    """Download the portfolio prices and print return and P&L summaries."""
     print("Downloading prices...")
     prices = download_prices()
     print(f"Loaded {prices.shape[0]} days x {prices.shape[1]} instruments")

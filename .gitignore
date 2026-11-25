@@ -12,3 +12,5 @@ data/
 *credentials*
 *.pem
 *.key
+*.py[cod]
+.ruff_cache/
