@@ -1,7 +1,10 @@
 """Quick check: load data, build P&L, print basic stats."""
 
 from src.portfolio import (
-    download_prices, compute_returns, portfolio_pnl, signed_notionals
+    download_prices,
+    compute_returns,
+    portfolio_pnl,
+    signed_notionals,
 )
 
 
