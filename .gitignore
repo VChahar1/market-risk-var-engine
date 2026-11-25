@@ -4,3 +4,13 @@ __pycache__/
 .pytest_cache/
 .ipynb_checkpoints/
 data/
+
+# Local secrets and credentials
+.env
+.env.*
+!.env.example
+*credentials*
+*.pem
+*.key
+*.py[cod]
+.ruff_cache/

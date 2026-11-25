@@ -1,15 +1,13 @@
-"""Test suite for the market-risk engine.
+"Test suite for the market-risk engine."
 
-These verify invariants (properties that must always hold) and analytic
-benchmarks (cases with a known answer) — the checks a model-validation team
-writes. Run with:  pytest tests/test_risk.py
-"""
 import numpy as np
 import pandas as pd
 from scipy import stats
 
 from src.risk_measures import (
-    historical_var, parametric_var, historical_es,
+    historical_var,
+    parametric_var,
+    historical_es,
 )
 from src.backtesting import rolling_backtest, kupiec_pof_test
 from src.plat import hypothetical_pnl, risk_theoretical_pnl, plat_metrics
@@ -68,8 +66,9 @@ def test_plat_detects_broken_model():
     rr = pd.DataFrame(rng.normal(0, 0.01, (2000, len(cols))), columns=cols)
     hpl = hypothetical_pnl(rr, w)
     good = risk_theoretical_pnl(rr, w, noise=0.02)
-    poor = risk_theoretical_pnl(rr, w, omit=["SPY"],
-                                factor_scale={"AAPL": 0.5, "JPM": 0.5}, noise=0.05)
+    poor = risk_theoretical_pnl(
+        rr, w, omit=["SPY"], factor_scale={"AAPL": 0.5, "JPM": 0.5}, noise=0.05
+    )
     sp_g, ks_g = plat_metrics(hpl, good)
     sp_p, ks_p = plat_metrics(hpl, poor)
     assert sp_g > sp_p and ks_g < ks_p

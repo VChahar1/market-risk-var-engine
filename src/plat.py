@@ -2,6 +2,7 @@
 the right risk factors. Flat functions comparing hypothetical P&L (truth)
 against risk-theoretical P&L (the model's view).
 """
+
 from __future__ import annotations
 import numpy as np
 import pandas as pd
@@ -10,19 +11,20 @@ from scipy import stats
 
 def hypothetical_pnl(returns: pd.DataFrame, w: pd.Series) -> pd.Series:
     """Full-revaluation P&L using all risk factors (the truth, HPL)."""
-    return pd.Series(returns[w.index].values @ w.values,
-                     index=returns.index, name="HPL")
+    return pd.Series(
+        returns[w.index].values @ w.values, index=returns.index, name="HPL"
+    )
 
 
-def risk_theoretical_pnl(returns: pd.DataFrame, w: pd.Series,
-                         omit=None, factor_scale: dict | None = None,
-                         noise: float = 0.0, seed: int = 0) -> pd.Series:
-    """P&L from a risk model that may misrepresent factors (RTPL).
-
-    omit:         tickers the model does NOT track (missing risk factors).
-    factor_scale: dict ticker->multiplier, a model that MIS-WEIGHTS a factor.
-    noise:        extra idiosyncratic noise (model imperfection).
-    """
+def risk_theoretical_pnl(
+    returns: pd.DataFrame,
+    w: pd.Series,
+    omit=None,
+    factor_scale: dict | None = None,
+    noise: float = 0.0,
+    seed: int = 0,
+) -> pd.Series:
+    "P&L from a risk model that may misrepresent factors (RTPL)."
     used = w.copy()
     if omit:
         used = used.drop(omit)
@@ -45,11 +47,7 @@ def plat_metrics(hpl: pd.Series, rtpl: pd.Series):
 
 
 def plat_zone(spearman: float, ks: float) -> str:
-    """FRTB-style PLAT zone (illustrative thresholds).
-
-    GREEN pass: Spearman >= 0.80 AND KS <= 0.09.
-    RED fail:   Spearman < 0.70 OR KS > 0.12.
-    """
+    "FRTB-style PLAT zone (illustrative thresholds)."
     if spearman >= 0.80 and ks <= 0.09:
         return "GREEN (pass)"
     if spearman < 0.70 or ks > 0.12:
@@ -62,6 +60,7 @@ def plat_report(hpl: pd.Series, models: dict) -> pd.DataFrame:
     rows = []
     for name, rtpl in models.items():
         sp, ks = plat_metrics(hpl, rtpl)
-        rows.append({"model": name, "spearman": sp, "ks_stat": ks,
-                     "zone": plat_zone(sp, ks)})
+        rows.append(
+            {"model": name, "spearman": sp, "ks_stat": ks, "zone": plat_zone(sp, ks)}
+        )
     return pd.DataFrame(rows).set_index("model")

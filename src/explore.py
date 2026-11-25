@@ -1,11 +1,15 @@
 """Quick check: load data, build P&L, print basic stats."""
 
 from src.portfolio import (
-    download_prices, compute_returns, portfolio_pnl, signed_notionals
+    download_prices,
+    compute_returns,
+    portfolio_pnl,
+    signed_notionals,
 )
 
 
-def main():
+def main() -> None:
+    """Download the portfolio prices and print return and P&L summaries."""
     print("Downloading prices...")
     prices = download_prices()
     print(f"Loaded {prices.shape[0]} days x {prices.shape[1]} instruments")
